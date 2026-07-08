@@ -71,18 +71,37 @@
                 ?>
                         <tr>
                             <td><?= $item['name'] ?></td>
-                            <td><?= number_to_currency($item['price'], 'IDR') ?></td>
+                            <td>
+                                <?php if($diskon > 0): ?>
+                                    <small>
+                                        <del><?= number_to_currency($item['price'], 'IDR') ?></del>
+                                    </small><br>
+                                    <?= number_to_currency($item['price'] - $diskon, 'IDR') ?>
+                                <?php else: ?>
+                                    <?= number_to_currency($item['price'], 'IDR') ?>
+                                <?php endif; ?>
+                            </td>
                             <td><?= $item['qty'] ?></td>
-                            <td><?= number_to_currency($item['price'] * $item['qty'], 'IDR') ?></td>
+                            <td><?= number_to_currency(($item['price'] - $diskon) * $item['qty'], 'IDR') ?></td>
                         </tr>
                 <?php
                     endforeach;
                 endif;
                 ?>
+
+                <?php
+                    $totalDiskon = 0;
+                    foreach($items as $item){
+                        $totalDiskon += $diskon * $item['qty'];
+                    }
+
+                    $totalBelanja = $total - $totalDiskon;
+                ?>
+
                 <tr>
                     <td colspan="2"></td>
                     <td>Subtotal</td>
-                    <td><?= number_to_currency($total, 'IDR') ?></td>
+                    <td><?= number_to_currency($totalBelanja, 'IDR') ?></td>
                 </tr>
                 <tr>
                     <td colspan="2"></td>
@@ -100,7 +119,7 @@
 <script>
 $(document).ready(function() {
     let ongkir = 0;
-    let subtotal = <?= $total ?>;
+    let subtotal = <?= $totalBelanja ?>;
     hitungTotal();
 
     function hitungTotal() {

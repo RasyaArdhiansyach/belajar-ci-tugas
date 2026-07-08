@@ -14,7 +14,7 @@ class ProdukController extends BaseController
 
     function __construct()
     {
-        helper('form');
+        helper(['form', 'number']);
         $this->productModel = new ProductModel();
     }
 

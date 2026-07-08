@@ -42,3 +42,17 @@ $routes->get('history', 'TransaksiController::history', ['filter' => 'auth']);
 $routes->resource('api/products', ['controller' => 'Api\ProdukController']);
 
 $routes->get('api/transactions', 'Api\TransaksiController::index');
+
+$routes->group('discount', ['filter' => 'auth'], function ($routes) {
+    $routes->get('', 'DiscountController::index');
+    $routes->post('', 'DiscountController::create');
+    $routes->post('edit/(:num)', 'DiscountController::edit/$1');
+    $routes->get('delete/(:num)', 'DiscountController::delete/$1');
+});
+
+$routes->group('pembelian', ['filter'=>'auth'], function($routes){
+    $routes->get('', 'PembelianController::index');
+    $routes->post('status/(:num)', 'PembelianController::status/$1');
+});
+
+$routes->resource('api/discount', ['controller' => 'Api\DiscountController']);

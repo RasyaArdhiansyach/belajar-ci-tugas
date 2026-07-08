@@ -1,0 +1,25 @@
+### Index
+GET http://localhost:8080/api/discount
+
+### Show
+GET http://localhost:8080/api/discount/1
+
+### Create
+POST http://localhost:8080/api/discount
+Content-Type: application/json
+
+{
+    "tanggal":"2026-07-20",
+    "nominal":150000
+}
+
+### Update
+PUT http://localhost:8080/api/discount/1
+Content-Type: application/json
+
+{
+    "nominal":250000
+}
+
+### Delete
+DELETE http://localhost:8080/api/discount/1

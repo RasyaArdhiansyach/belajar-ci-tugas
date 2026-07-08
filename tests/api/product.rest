@@ -19,25 +19,25 @@ Content-Type: application/json
 }
 
 ### update all field
-PUT http://localhost:8080/api/products/11
+PUT http://localhost:8080/api/products/16
 Authorization: Bearer my-secret-token
 Content-Type: application/json
 
 {
-  "nama": "Yoga Slim 7i Aura Editions",
+  "nama": "Yoga Slim 7i Aura Editionss",
   "harga": 25000000,
   "jumlah": 20
 }
 
 ### update some field
-PATCH http://localhost:8080/api/products/11
+PATCH http://localhost:8080/api/products/16
 Authorization: Bearer my-secret-token
 Content-Type: application/json
 
 { 
-  "jumlah": 25
+  "jumlah": 47
 }
 
 ### delete
-DELETE http://localhost:8080/api/products/11
+DELETE http://localhost:8080/api/products/16
 Authorization: Bearer my-secret-token

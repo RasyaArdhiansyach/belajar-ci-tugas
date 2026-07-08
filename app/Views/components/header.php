@@ -16,6 +16,19 @@
       </form>
     </div><!-- End Search Bar -->
 
+    <?php if (session()->get('today_discount')) : ?>
+    <div class="ms-3">
+        <span class="badge bg-success">
+            Hari ini ada diskon
+            <?= number_to_currency(
+                session()->get('today_discount')['nominal'],
+                'IDR'
+            ) ?>
+            per item
+        </span>
+      </div>
+    <?php endif; ?></div><!-- End Discount UI -->
+
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 

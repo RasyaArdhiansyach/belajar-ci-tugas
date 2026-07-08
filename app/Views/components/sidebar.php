@@ -16,17 +16,33 @@
                 <span>Keranjang</span>
             </a>
         </li><!-- End Keranjang Nav --> 
-        <?php
-        if (session()->get('role') =='admin') {
-        ?>
+
+        <?php if (session()->get('role') == 'admin') : ?>
+
         <li class="nav-item">
-            <a class="nav-link <?php echo (uri_string() == 'produk') ? "" : "collapsed" ?>" href="produk">
+            <a class="nav-link <?= (uri_string() == 'produk') ? '' : 'collapsed' ?>" href="<?= base_url('produk') ?>">
                 <i class="bi bi-receipt"></i>
                 <span>Produk</span>
             </a>
         </li><!-- End Produk Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link <?= (uri_string() == 'discount') ? '' : 'collapsed' ?>" href="<?= base_url('discount') ?>">
+                <i class="bi bi-percent"></i>
+                <span>Diskon</span>
+            </a>
+        </li><!-- End Diskon Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link <?= (uri_string() == 'pembelian') ? '' : 'collapsed' ?>" href="<?= base_url('pembelian') ?>">
+                <i class="bi bi-cart-check"></i>
+                <span>Pembelian</span>
+            </a><!-- End Pembelian Nav -->
+        </li>
+        <?php endif; ?>
+
         <?php
-        }
+        
         ?>
 
         <li class="nav-item">

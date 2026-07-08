@@ -32,9 +32,24 @@ if (session()->getFlashData('success')) {
                 <tr>
                     <td><?= $item['name'] ?></td>
                     <td><img src="<?= base_url() . "img/" . $item['options']['foto'] ?>" width="100px"></td>
-                    <td><?= number_to_currency($item['price'], 'IDR') ?></td> 
+                    <td>
+                        <?php if ($diskon > 0): ?>
+                            <small>
+                                <del><?= number_to_currency($item['price'], 'IDR') ?></del>
+                            </small><br>
+
+                            <?= number_to_currency($item['price'] - $diskon, 'IDR') ?>
+                        <?php else: ?>
+                            <?= number_to_currency($item['price'], 'IDR') ?>
+                        <?php endif; ?>
+                    </td> 
                     <td><input type="number" min="1" name="qty<?= $i++ ?>" class="form-control" value="<?= $item['qty'] ?>"></td>
-                    <td><?= number_to_currency($item['subtotal'], 'IDR') ?></td>
+                    <td>
+                        <?= number_to_currency(
+                            ($item['price'] - $diskon) * $item['qty'],
+                            'IDR'
+                        ) ?>
+                    </td>
                     <td>
                         <a href="<?= base_url('keranjang/delete/' . $item['rowid'] . '') ?>" class="btn btn-danger"><i class="bi bi-trash"></i></a>
                     </td>
@@ -46,8 +61,16 @@ if (session()->getFlashData('success')) {
     </tbody>
 </table> 
 
+<?php
+    $totalDiskon = 0;
+
+    foreach ($items as $item) {
+        $totalDiskon += $diskon * $item['qty'];
+    }
+?>
+
 <div class="alert alert-info">
-    <?= "Total = " . number_to_currency($total, 'IDR') ?>
+    <?= "Total = " . number_to_currency($total - $totalDiskon, 'IDR') ?>
 </div>
 
 <button type="submit" class="btn btn-primary">Perbarui Keranjang</button>

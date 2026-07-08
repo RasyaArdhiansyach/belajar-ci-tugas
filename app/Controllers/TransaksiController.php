@@ -9,27 +9,34 @@ use App\Services\RajaOngkirService;
 use App\Models\TransactionModel;
 use App\Models\TransactionDetailModel;
 
+use App\Models\DiscountModel;
+
 class TransaksiController extends BaseController
 {
     protected $cart;
     protected $transactionModel;
     protected $transactionDetailModel;
+    protected $discountModel;
 
     public function __construct()
     {
         helper(['number', 'form']);
         $this->cart = service('cart');
         $this->transactionModel = new TransactionModel();
-        $this->transactionDetailModel = new TransactionDetailModel(); 
+        $this->transactionDetailModel = new TransactionDetailModel();
+        $this->discountModel = new DiscountModel(); 
     }
 
     public function index()
     {  
-        $data = [
-            'items' => $this->cart->contents(),
-            'total' => $this->cart->total()
-        ];
+        $diskon = $this->getDiskonHariIni();
 
+        $data = [
+            'items'   => $this->cart->contents(),
+            'total'   => $this->cart->total(),
+            'diskon'  => $diskon
+        ];
+    
         return view('v_keranjang', $data);
     }
 
@@ -99,12 +106,14 @@ class TransaksiController extends BaseController
     }
     public function checkout()
     {  
+        $diskon = $this->getDiskonHariIni();
 
         $data = [
-            'items' => $this->cart->contents(),
-            'total' => $this->cart->total(),
+            'items'   => $this->cart->contents(),
+            'total'   => $this->cart->total(),
+            'diskon'  => $diskon
         ];
-
+        
         return view('v_checkout', $data);
     }
     public function destinations()
@@ -155,6 +164,7 @@ class TransaksiController extends BaseController
     public function buy()
     { 
         $cartItems = $this->cart->contents();
+        $diskon = $this->getDiskonHariIni();
 
         if (empty($cartItems)) {
             return redirect()->back();
@@ -165,7 +175,8 @@ class TransaksiController extends BaseController
 
         $subtotal = 0;
         foreach ($cartItems as $item) {
-            $subtotal += $item['qty'] * $item['price'];
+            $hargaSetelahDiskon = $item['price'] - $diskon;
+            $subtotal += $hargaSetelahDiskon * $item['qty'];
         }
 
         $ongkir = (int) $this->request->getPost('ongkir');
@@ -188,12 +199,13 @@ class TransaksiController extends BaseController
 
         // insert transaction detail
         foreach ($cartItems as $item) {
+            $hargaSetelahDiskon = $item['price'] - $diskon;
             $this->transactionDetailModel->insert([
                 'transaction_id' => $transactionId,
                 'product_id'     => $item['id'],
                 'jumlah'         => $item['qty'],
-                'diskon'         => 0,
-                'subtotal_harga' => $item['qty'] * $item['price'] 
+                'diskon'         => $diskon,
+                'subtotal_harga' => $hargaSetelahDiskon * $item['qty']
             ]);
         }
 
@@ -223,6 +235,17 @@ class TransaksiController extends BaseController
         ]; 
 
         return view('v_history', $data);
+    }
+    private function getDiskonHariIni()
+    {
+        $diskon = $this->discountModel
+            ->where('tanggal', date('Y-m-d'))
+            ->first();
+
+        if($diskon){
+            return $diskon['nominal'];
+        }
+        return 0;
     }
 
 }
